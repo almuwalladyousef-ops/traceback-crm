@@ -99,8 +99,17 @@ const logDefinitions: Prisma.LogDefinition[] = [
 ];
 
 const createPrismaClient = () => {
+	const ca = process.env.DATABASE_SSL_CA;
+	const url = new URL(connectionString);
+	if (ca) {
+		url.searchParams.delete("sslmode");
+		url.searchParams.delete("sslrootcert");
+	}
 	const client = new PrismaClient({
-		adapter: new PrismaPg({ connectionString }),
+		adapter: new PrismaPg({
+			connectionString: url.toString(),
+			ssl: ca ? { ca, rejectUnauthorized: true } : undefined,
+		}),
 		log: logDefinitions,
 	});
 

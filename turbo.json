@@ -36,7 +36,8 @@
 		"VERCEL_GIT_COMMIT_SHA",
 		"NVIDIA_API_KEY",
 		"NVIDIA_MODEL",
-		"DIRECT_DATABASE_URL"
+		"DIRECT_DATABASE_URL",
+		"DATABASE_SSL_CA"
 	],
 	"tasks": {
 		"topo": {
