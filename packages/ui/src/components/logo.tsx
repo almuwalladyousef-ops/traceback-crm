@@ -10,10 +10,7 @@ const Logo = (props: React.SVGProps<SVGSVGElement>) => (
 		aria-label="Traceback Logo"
 		{...props}
 	>
-		<path
-			d="M80 96h352v80H296v256h-80V176H80z"
-			fill="currentColor"
-		/>
+		<image href="/traceback-logo.png" width={512} height={512} />
 	</svg>
 );
 export default Logo;

@@ -72,7 +72,7 @@ async function SignIn({
 	}
 
 	const configured: MailboxProviderId[] = [];
-	if (options?.google ?? true) configured.push("google");
+	if (options?.google ?? false) configured.push("google");
 	if (options?.microsoft ?? false) configured.push("microsoft");
 
 	const providers = options?.providers ?? [];

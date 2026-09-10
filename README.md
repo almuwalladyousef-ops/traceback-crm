@@ -39,7 +39,7 @@ The current Hobby-compatible schedules run daily: mailbox sync at 08:00 UTC and 
 
 NVIDIA inference is configured with NVIDIA_API_KEY and NVIDIA_MODEL. The research agent, builder, and runner call NVIDIA directly, with thinking disabled for reliable tool calling. The tested model is `nvidia/nemotron-3-super-120b-a12b`. No OpenAI or AI Gateway key is needed for this mode. The deployment model is fixed while NVIDIA_MODEL is set; the chooser reflects this. Requests remain subject to NVIDIA quotas.
 
-- GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET: optional Google sign-in and Gmail/Calendar access. Register the callback on the API URL. Workspace credentials are separate from Gemini API credentials.
+- GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET: optional Google sign-in and Gmail/Calendar access. Register `https://traceback-crm.vercel.app/api/auth/callback/google` as the Web application redirect URI and `https://traceback-crm.vercel.app` as an authorized JavaScript origin. Workspace credentials are separate from Gemini API credentials.
 - PERPLEXITY_API_KEY: optional web research.
 - Context key: optional enrichment, configured in Settings. It no longer blocks onboarding.
 - BLOB_READ_WRITE_TOKEN: optional Vercel Blob storage for images.
