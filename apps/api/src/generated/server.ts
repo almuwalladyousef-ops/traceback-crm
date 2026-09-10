@@ -31,7 +31,7 @@ import { agentModelOutput, modelCatalogOutput, setAgentModelInput, researchKeyOu
 import { slackStatusOutput, slackMatchesOutput, slackChannelsInput, slackChannelsOutput, slackJoinChannelInput, slackJoinChannelOutput, slackRefreshPeopleOutput, slackCreateChannelInput, slackCreateChannelOutput, slackDisconnectOutput } from "../slack/slack.contracts";
 import { ssoSignInOptionsOutput, ssoSettingsOutput, ssoProviderListInput, ssoProviderListOutput, registerSsoProviderInput, ssoProviderOutput, deleteSsoProviderInput, deleteSsoProviderOutput } from "../sso/sso.contracts";
 import { trackingSettingsOutput, trackingFlagInput, cookieLifetimeInput, addDomainInput, trackedDomainOutput, removeDomainInput, rotateSiteIdOutput, verifyInput, verifyOutput, sourcesOutput, companyActivityInput, websiteActivityOutput, contactActivityInput } from "../tracking/tracking.contracts";
-import { workspaceOutput, memberListInput, memberListOutput, updateWorkspaceInput, setMemberRoleInput, workspaceMemberOutput } from "../workspace/workspace.contracts";
+import { workspaceOutput, memberListInput, memberListOutput, inviteMemberInput, inviteMemberOutput, updateWorkspaceInput, setMemberRoleInput, workspaceMemberOutput } from "../workspace/workspace.contracts";
 import type { UsersRouter } from "../users/users.router";
 
 const appRouter = t.router({
@@ -742,6 +742,10 @@ const appRouter = t.router({
       .input(memberListInput)
       .output(memberListOutput)
       .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    invite: publicProcedure
+      .input(inviteMemberInput)
+      .output(inviteMemberOutput)
+      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     update: publicProcedure
       .input(updateWorkspaceInput)
       .output(workspaceOutput)

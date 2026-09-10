@@ -1,3 +1,5 @@
+> Traceback fork: see the root README for current setup. Team registration uses invitation links and passwords; ALLOWED_SIGN_IN is optional for verified social accounts. Context enrichment and a company website are optional. NVIDIA inference uses the configured NVIDIA_MODEL. Scheduled jobs currently run daily.
+
 # Environment
 
 Setup, DB commands, Google Cloud and the `vercel env pull` hazard: `docs/setup.md`.

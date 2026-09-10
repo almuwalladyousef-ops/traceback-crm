@@ -33,6 +33,14 @@ export class SettingsService {
 	) {}
 
 	async agentModel(): Promise<AgentModelSettings> {
+		if (process.env.NVIDIA_MODEL)
+			return {
+				selectedId: process.env.NVIDIA_MODEL,
+				effectiveId: process.env.NVIDIA_MODEL,
+				defaultId: process.env.NVIDIA_MODEL,
+				effective: await this.catalog.find(process.env.NVIDIA_MODEL),
+				updatedAt: null,
+			};
 		const [model, row] = await Promise.all([
 			readAgentModel(this.db),
 			this.db.appSetting.findFirst({ select: { updatedAt: true } }),

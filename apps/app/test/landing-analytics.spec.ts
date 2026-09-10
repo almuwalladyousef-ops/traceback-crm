@@ -2,13 +2,13 @@ import { describe, expect, it } from "bun:test";
 import { analyticsAllowed } from "../lib/analytics";
 
 describe("analyticsAllowed", () => {
-	it("allows the two hosts the landing page is served from", () => {
-		expect(analyticsAllowed("trycrm.ai")).toBe(true);
-		expect(analyticsAllowed("www.trycrm.ai")).toBe(true);
+	it("disables analytics on upstream hosts", () => {
+		expect(analyticsAllowed("trycrm.ai")).toBe(false);
+		expect(analyticsAllowed("www.trycrm.ai")).toBe(false);
 	});
 
-	it("ignores case and surrounding whitespace", () => {
-		expect(analyticsAllowed(" TryCRM.ai ")).toBe(true);
+	it("does not enable analytics through case or whitespace", () => {
+		expect(analyticsAllowed(" TryCRM.ai ")).toBe(false);
 	});
 
 	it("refuses a self-hosted install serving the same page", () => {

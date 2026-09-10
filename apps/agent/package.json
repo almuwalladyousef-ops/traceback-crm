@@ -19,10 +19,12 @@
 		"clean": "rm -rf .turbo .eve node_modules"
 	},
 	"dependencies": {
+		"@ai-sdk/openai-compatible": "^3.0.47",
 		"@crm/db": "workspace:*",
 		"@crm/env": "workspace:*",
 		"@crm/telemetry": "workspace:*",
 		"@crm/validation": "workspace:*",
+		"ai": "^7.0.97",
 		"context.dev": "2.10.0",
 		"eve": "^0.29.4",
 		"zod": "^4.4.3"
@@ -33,5 +35,8 @@
 		"just-bash": "^3.2.0",
 		"microsandbox": "^0.6.8",
 		"typescript": "^5.9.2"
+	},
+	"engines": {
+		"node": ">=24"
 	}
 }

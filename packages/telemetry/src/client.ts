@@ -30,6 +30,7 @@ function posthog(): PostHog | null {
 	built = true;
 
 	const off = telemetryDisabled();
+	if (off || !POSTHOG_KEY) return null;
 
 	try {
 		client = new PostHog(POSTHOG_KEY, {

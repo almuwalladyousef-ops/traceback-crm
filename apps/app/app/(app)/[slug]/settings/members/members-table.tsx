@@ -23,6 +23,7 @@ import { LocalRelativeTime } from "@/components/local-date-time";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
+import { InviteMember } from "./invite-member";
 import { membersSearchParams } from "./members-search-params";
 
 const ROLE_LABEL = {
@@ -168,21 +169,24 @@ export function MembersTable() {
 	];
 
 	return (
-		<DataTable
-			query={query}
-			search={<ListSearch placeholder="Search by name or email…" />}
-			columns={columns(
-				workspace.data?.canChangeRoles ?? false,
-				(member, role) => setRole.mutate({ memberId: member.id, role }),
-				setRole.isPending,
-			)}
-			rows={members.data?.rows ?? []}
-			total={members.data?.total ?? 0}
-			facetCounts={facetCounts}
-			facets={facets}
-			getRowId={(row) => row.id}
-			loading={members.isFetching}
-			empty="Nobody matches this view."
-		/>
+		<>
+			{workspace.data?.canChangeRoles ? <InviteMember /> : null}
+			<DataTable
+				query={query}
+				search={<ListSearch placeholder="Search by name or email…" />}
+				columns={columns(
+					workspace.data?.canChangeRoles ?? false,
+					(member, role) => setRole.mutate({ memberId: member.id, role }),
+					setRole.isPending,
+				)}
+				rows={members.data?.rows ?? []}
+				total={members.data?.total ?? 0}
+				facetCounts={facetCounts}
+				facets={facets}
+				getRowId={(row) => row.id}
+				loading={members.isFetching}
+				empty="Nobody matches this view."
+			/>
+		</>
 	);
 }

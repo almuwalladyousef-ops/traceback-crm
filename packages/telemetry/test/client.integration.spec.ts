@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test";
 import { db } from "@crm/db";
 import {
 	type JsonObject,
@@ -10,6 +10,12 @@ import { captureNow, resetTelemetryClient } from "../src/client";
 import { milestone } from "../src/events";
 import { forgetInstall, readInstall, stableUuid } from "../src/install";
 import { POSTHOG_HOST } from "../src/project";
+
+mock.module("../src/project", () => ({
+	POSTHOG_KEY: "test-key",
+	POSTHOG_HOST: "https://telemetry.example",
+	POSTHOG_UI_HOST: "https://telemetry.example",
+}));
 
 const real = {
 	fetch: globalThis.fetch,
@@ -58,7 +64,7 @@ beforeEach(() => {
 	forgetInstall();
 
 	process.env.NODE_ENV = "development";
-	delete process.env.CRM_TELEMETRY_DISABLED;
+	process.env.CRM_TELEMETRY_DISABLED = "0";
 	delete process.env.DO_NOT_TRACK;
 });
 

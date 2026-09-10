@@ -1,3 +1,4 @@
+import { NVIDIA, nvidiaModel } from "./lib/nvidia";
 import "@crm/env/load";
 
 import { DEFAULT_AGENT_MODEL } from "@crm/db/settings";
@@ -14,9 +15,14 @@ void syncVersion();
 
 export default defineAgent({
 	model: defineDynamic({
-		fallback: DEFAULT_AGENT_MODEL.id,
-		events: { "session.started": () => selectedModel() },
+		fallback: nvidiaModel() ?? DEFAULT_AGENT_MODEL.id,
+		events: {
+			"session.started": () => (nvidiaModel() ? null : selectedModel()),
+		},
 	}),
+	modelContextWindowTokens: nvidiaModel()
+		? NVIDIA.contextWindowTokens
+		: DEFAULT_AGENT_MODEL.contextWindowTokens,
 	limits: {
 		maxInputTokensPerSession: 500_000,
 		maxOutputTokensPerSession: 50_000,

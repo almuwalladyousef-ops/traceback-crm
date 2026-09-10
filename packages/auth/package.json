@@ -8,14 +8,16 @@
 		"./client": "./src/client.ts",
 		"./cookies": "./src/cookies.ts",
 		"./scopes": "./src/scopes.ts",
-		"./workspace": "./src/workspace.ts"
+		"./workspace": "./src/workspace.ts",
+		"./registration": "./src/registration.ts"
 	},
 	"scripts": {
 		"auth:generate": "better-auth generate --config src/auth.ts --output ../db/prisma/schema.prisma --y",
 		"check-types": "tsc --noEmit",
 		"lint": "biome check .",
 		"test": "bun test",
-		"clean": "rm -rf .turbo node_modules"
+		"clean": "rm -rf .turbo node_modules",
+		"owner:invite": "bun scripts/create-owner-invite.ts"
 	},
 	"dependencies": {
 		"@better-auth/api-key": "1.6.25",

@@ -29,15 +29,15 @@ export function OnboardingForm({ placeholder }: { placeholder: string }) {
 	const nameId = useId();
 	const slugId = useId();
 	const websiteId = useId();
-	const [name, setName] = useState("");
-	const [slug, setSlug] = useState("");
+	const [name, setName] = useState("Traceback");
+	const [slug, setSlug] = useState("traceback");
 	const slugEdited = useRef(false);
 
 	const save = useMutation(
 		trpc.workspace.update.mutationOptions({
 			onSuccess: () => {
 				router.refresh();
-				router.replace("/onboarding/research");
+				router.replace("/");
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -108,7 +108,7 @@ export function OnboardingForm({ placeholder }: { placeholder: string }) {
 				</Field>
 
 				<Field>
-					<FieldLabel htmlFor={websiteId}>Website</FieldLabel>
+					<FieldLabel htmlFor={websiteId}>Website (optional)</FieldLabel>
 					<InputGroup>
 						<InputGroupAddon>
 							<InputGroupText>https://</InputGroupText>
@@ -122,7 +122,6 @@ export function OnboardingForm({ placeholder }: { placeholder: string }) {
 							autoCorrect="off"
 							spellCheck={false}
 							inputMode="url"
-							required
 						/>
 					</InputGroup>
 					<FieldDescription>

@@ -11,7 +11,7 @@ export type MemberListInput = z.infer<typeof memberListInput>;
 
 export const updateWorkspaceInput = z.object({
 	name: z.string().trim().min(1).max(120),
-	website: z.string().trim().min(1).max(255),
+	website: z.string().trim().max(255),
 	slug: z
 		.string()
 		.trim()
@@ -59,4 +59,12 @@ export const memberListOutput = z.object({
 	rows: z.array(workspaceMemberOutput),
 	total: z.number(),
 	facetCounts: z.record(z.string(), z.record(z.string(), z.number())),
+});
+
+export const inviteMemberInput = z.object({
+	email: z.email().transform((value) => value.trim().toLowerCase()),
+});
+export const inviteMemberOutput = z.object({
+	token: z.string(),
+	expiresAt: z.string(),
 });

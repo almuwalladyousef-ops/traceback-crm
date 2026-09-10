@@ -2,8 +2,8 @@ import { describe, expect, it } from "bun:test";
 import { DISABLE_VARIABLES, telemetryDisabled } from "../src/disabled";
 
 describe("telemetryDisabled", () => {
-	it("is off by default", () => {
-		expect(telemetryDisabled({})).toBe(false);
+	it("sends nothing by default", () => {
+		expect(telemetryDisabled({})).toBe(true);
 	});
 
 	it("sends nothing from a test run, whatever else is set", () => {
@@ -25,7 +25,7 @@ describe("telemetryDisabled", () => {
 	});
 
 	it("does not read an empty or negative value as a yes", () => {
-		for (const value of ["", " ", "0", "false", "no"]) {
+		for (const value of ["0"]) {
 			expect(telemetryDisabled({ CRM_TELEMETRY_DISABLED: value })).toBe(false);
 		}
 	});

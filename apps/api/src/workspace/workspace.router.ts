@@ -12,6 +12,8 @@ import type { AuthedTrpcContext } from "../trpc/context.types";
 import { AuthMiddleware } from "../trpc/middlewares/auth.middleware";
 import { restMeta } from "../trpc/openapi";
 import {
+	inviteMemberInput,
+	inviteMemberOutput,
 	memberListInput,
 	memberListOutput,
 	setMemberRoleInput,
@@ -46,6 +48,14 @@ export class WorkspaceRouter {
 		@Input() input: z.infer<typeof memberListInput>,
 	) {
 		return this.workspace.members(ctx.user.id, input);
+	}
+
+	@Mutation({ input: inviteMemberInput, output: inviteMemberOutput })
+	async invite(
+		@Ctx() ctx: AuthedTrpcContext,
+		@Input() input: z.infer<typeof inviteMemberInput>,
+	) {
+		return this.workspace.invite(ctx.user.id, input.email);
 	}
 
 	@Mutation({

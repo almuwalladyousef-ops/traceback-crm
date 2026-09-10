@@ -7,6 +7,7 @@ import {
 	type WorkspaceRole,
 	workspaceRoleOf,
 } from "@crm/auth";
+import { createRegistrationInvite } from "@crm/auth/registration";
 import type { Db, Prisma } from "@crm/db";
 import { isOnboarded, markOnboarded, workspaceSlug } from "@crm/db/workspace";
 import {
@@ -93,6 +94,20 @@ export class WorkspaceService {
 		};
 	}
 
+	async invite(userId: string, email: string) {
+		if (!canChangeRole(await workspaceRoleOf(userId, this.db))) {
+			throw new ForbiddenException(
+				"Only an owner or admin can invite teammates.",
+			);
+		}
+		if (
+			await this.db.user.findUnique({ where: { email }, select: { id: true } })
+		) {
+			throw new BadRequestException("This teammate already has an account.");
+		}
+		return createRegistrationInvite(this.db, email);
+	}
+
 	async update(
 		userId: string,
 		input: UpdateWorkspaceInput,
@@ -112,7 +127,7 @@ export class WorkspaceService {
 
 		const website = normalizeDomain(input.website);
 
-		if (!website) {
+		if (input.website.trim() && !website) {
 			throw new BadRequestException(
 				"That is not a website. Enter the domain, like acme.com.",
 			);
@@ -130,7 +145,7 @@ export class WorkspaceService {
 
 		this.logger.log({ message: "Workspace updated", userId });
 
-		if (website !== before?.website) {
+		if (website && website !== before?.website) {
 			await this.agent.workspaceChanged(
 				website,
 				before?.website

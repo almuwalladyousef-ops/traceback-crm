@@ -2,15 +2,17 @@ import { db } from "@crm/db";
 import { DEFAULT_AGENT_MODEL } from "@crm/db/settings";
 import { defineAgent, defineDynamic } from "eve";
 import { z } from "zod";
+import { NVIDIA, nvidiaModel } from "../../lib/nvidia";
 import { attribute, purposeOf } from "../../lib/session-purpose";
 
 export default defineAgent({
 	description:
 		"Execute one immutable deployed CRM agent version and persist its result and every side effect.",
 	model: defineDynamic({
-		fallback: DEFAULT_AGENT_MODEL.id,
+		fallback: nvidiaModel() ?? DEFAULT_AGENT_MODEL.id,
 		events: {
 			"session.started": async (_event, ctx) => {
+				if (nvidiaModel()) return null;
 				if (purposeOf(ctx) !== "team-agent") return null;
 				const runId = attribute(ctx, "runId");
 				if (!runId) return null;
@@ -36,6 +38,9 @@ export default defineAgent({
 		summary: z.string().min(1).max(1000),
 		result: z.record(z.string(), z.unknown()).nullable(),
 	}),
+	modelContextWindowTokens: nvidiaModel()
+		? NVIDIA.contextWindowTokens
+		: DEFAULT_AGENT_MODEL.contextWindowTokens,
 	limits: {
 		maxInputTokensPerSession: 500_000,
 		maxOutputTokensPerSession: 40_000,

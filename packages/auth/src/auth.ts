@@ -11,6 +11,7 @@ import { API_KEY_EXPIRATION, API_KEY_HEADER, API_KEY_PREFIX } from "./api-keys";
 import { AUTH_COOKIE_PREFIX } from "./cookies";
 import { env } from "./env";
 import { ensureWorkspaceMembership } from "./organization";
+import { consumeRegistrationInvite } from "./registration";
 import {
 	GOOGLE_PROVIDER_ID,
 	MICROSOFT_PROVIDER_ID,
@@ -23,11 +24,7 @@ import { slackConnectGuard } from "./slack-connect";
 import { rememberSlackInstall, replaceSlackConnection } from "./slack-grant";
 import { SLACK_REQUESTED_SCOPES, SLACK_USER_SCOPES } from "./slack-scopes";
 import { queueSlackInventorySync } from "./slack-sync";
-import {
-	hasSignInAllowList,
-	isWorkspaceEmail,
-	primaryWorkspaceDomain,
-} from "./workspace";
+import { isWorkspaceEmail, primaryWorkspaceDomain } from "./workspace";
 
 const socialProviders: NonNullable<BetterAuthOptions["socialProviders"]> = {};
 const slackOAuth = env.slack;
@@ -70,7 +67,7 @@ if (env.microsoft) {
 }
 
 export const auth = betterAuth({
-	appName: "CRM",
+	appName: "Traceback CRM",
 	baseURL: env.apiUrl,
 
 	database: prismaAdapter(db, {
@@ -78,7 +75,8 @@ export const auth = betterAuth({
 	}),
 
 	emailAndPassword: {
-		enabled: false,
+		enabled: true,
+		minPasswordLength: 12,
 	},
 
 	socialProviders,
@@ -258,20 +256,19 @@ export const auth = betterAuth({
 
 		user: {
 			create: {
-				before: async (user) => {
-					if (!hasSignInAllowList()) {
+				before: async (user, context) => {
+					const invited = await consumeRegistrationInvite(
+						db,
+						user.email,
+						context?.headers?.get("x-traceback-invite"),
+					);
+					if (
+						!invited &&
+						!(user.emailVerified && isWorkspaceEmail(user.email))
+					) {
 						throw new APIError("FORBIDDEN", {
 							message:
-								'No one can sign in yet: set ALLOWED_SIGN_IN in .env to your email domain (for example ALLOWED_SIGN_IN="acme.com") and restart.',
-						});
-					}
-
-					if (!isWorkspaceEmail(user.email)) {
-						const domain = primaryWorkspaceDomain();
-						throw new APIError("FORBIDDEN", {
-							message: domain
-								? `This CRM is private. Sign in with your @${domain} account.`
-								: "This CRM is private. That address is not on the allow-list.",
+								"Ask a Traceback administrator for a new invitation link.",
 						});
 					}
 

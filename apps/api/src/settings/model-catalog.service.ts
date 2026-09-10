@@ -69,6 +69,16 @@ export class ModelCatalogService {
 	constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
 
 	async models(): Promise<CatalogModel[] | null> {
+		if (process.env.NVIDIA_MODEL)
+			return [
+				{
+					id: process.env.NVIDIA_MODEL,
+					name: "NVIDIA Nemotron — Traceback",
+					provider: "NVIDIA",
+					contextWindowTokens: 131_072,
+					pricing: null,
+				},
+			];
 		const cached = await this.cache.get<CatalogModel[]>(CATALOG_KEY);
 		if (cached) return cached;
 
